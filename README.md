@@ -32,6 +32,14 @@
 $ npm install
 ```
 
+## Insert .env like this
+
+```
+PLAYLIST_ID = YOUR_PLAYLIST_ID
+YOUTUBE_KEY = YOUR_YOUTUBE_KEY
+
+```
+
 ## Running the app
 
 ```bash
