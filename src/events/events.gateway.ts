@@ -26,11 +26,30 @@ export class EventsGateway
   @WebSocketServer()
   server: Server;
 
-  @SubscribeMessage('events')
-  async handleEvent(@MessageBody() data) {
-    //console.log('handleEvent: ', data);
-    //return data;
-  }
+  // @SubscribeMessage('playlist')
+  // async handleEvent(@ConnectedSocket() socket: Socket) {
+  //   const { playlistId, YOUTUBE_KEY } = process.env;
+
+  //   // 1. youtube playlist를 가져온다.
+  //   let part = 'id, snippet, contentDetails, status',
+  //     videoId = '';
+  //   const res = await axios.get(
+  //     `https://www.googleapis.com/youtube/v3/playlistItems?part=${part}&maxResults=6&playlistId=${playlistId}&key=${YOUTUBE_KEY}`,
+  //   );
+  //   const playlist = res.data.items;
+
+  //   part = 'contentDetails';
+  //   playlist.forEach((element) => {
+  //     videoId += `${element.snippet.resourceId.videoId},`;
+  //   });
+  //   const Videores = await axios.get(
+  //     `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&key=${YOUTUBE_KEY}&part=contentDetails`,
+  //   );
+  //   // 2. playlist를 client에 전달한다.
+  //   // 왜인지 모르겠지만 Videores를 직접 전달하면 함수최대스택을 초과해 터져버린다.
+  //   const metaList = Videores.data.items;
+  //   socket.emit('playlist', playlist, metaList);
+  // }
 
   afterInit() {
     this.server.on('welcome', (room) => {
@@ -41,14 +60,13 @@ export class EventsGateway
 
   // 소켓이 연결되면 실행
   async handleConnection(@ConnectedSocket() socket: Socket) {
-    const playlistId = process.env.PLAYLIST_ID;
-    const YOUTUBE_KEY = process.env.YOUTUBE_KEY;
+    const { PLAYLIST_ID, YOUTUBE_KEY } = process.env;
 
     // 1. youtube playlist를 가져온다.
-    let part = "id, snippet, contentDetails, status";
+    let part = 'id, snippet, contentDetails, status';
 
     const res = await axios.get(
-      `https://www.googleapis.com/youtube/v3/playlistItems?part=${part}&maxResults=6&playlistId=${playlistId}&key=${YOUTUBE_KEY}`,
+      `https://www.googleapis.com/youtube/v3/playlistItems?part=${part}&maxResults=6&playlistId=${PLAYLIST_ID}&key=${YOUTUBE_KEY}`,
     );
     const playlist = res.data.items;
 
@@ -59,7 +77,7 @@ export class EventsGateway
     });
     //console.log('videoIdList: ', videoId);
     const Videores = await axios.get(
-      `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&key=${YOUTUBE_KEY}&part=contentDetails`
+      `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&key=${YOUTUBE_KEY}&part=contentDetails`,
     );
     // 2. playlist를 client에 전달한다.
     // 왜인지 모르겠지만 Videores를 직접 전달하면 함수최대스택을 초과해 터져버린다.
