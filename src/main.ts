@@ -6,8 +6,8 @@ import { config } from 'dotenv';
 
 async function bootstrap() {
   config();
-  const app = await NestFactory.create(EventsModule);
+  const app = await NestFactory.create(AppModule);
   app.useWebSocketAdapter(new IoAdapter(app));
-  await app.listen(3000);
+  await app.listen(8080);
 }
 bootstrap();
