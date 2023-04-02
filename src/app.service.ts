@@ -8,7 +8,7 @@ export class AppService {
   }
 
   async getPlayList(id: string) {
-    console.log('getPlayList');
+    console.log('getPlayList: ', id);
     const { YOUTUBE_KEY } = process.env;
     const playlistId =
       id == '1' ? process.env.PLAYLIST_ID : process.env.PLAYLIST2_ID;
@@ -28,7 +28,6 @@ export class AppService {
       `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&key=${YOUTUBE_KEY}&part=contentDetails`,
     );
     const metaList = Videores.data.items;
-
     return { playlist, metaList };
   }
 }
